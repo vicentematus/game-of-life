@@ -1,21 +1,20 @@
 <script lang="ts">
 	import Grid from '$lib/components/Grid.svelte';
+	import { game } from '$lib/game/data';
 	import { tick } from 'svelte';
 
-	let count = 1;
-	$: double = count * 2;
-
-	async function increment() {
-		count++;
-		await tick();
-		console.log(double);
-	}
 	// create a matrix for game of life
 	const matrix = Array.from({ length: 10 }, () =>
 		Array.from({ length: 10 }, () => (Math.random() > 0.5 ? 1 : 0))
 	);
-	increment();
+
+	game.set(matrix);
 	console.log(matrix);
 </script>
- <h1 class="text-3xl mt-14">game of life</h1>
-<Grid rows={10} columns={10} values={matrix} />
+
+<main class="flex items-center justify-center">
+	<section>
+		<h1 class="text-3xl">game of life</h1>
+		<Grid  rows={$game.length} columns={$game[0].length}/>
+	</section>
+</main>
