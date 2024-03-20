@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Grid from '$lib/components/Grid.svelte';
+	import GridP5 from '$lib/components/GridP5.svelte';
 	import { game } from '$lib/game/data';
 	import { tick } from 'svelte';
 
@@ -15,6 +16,9 @@
 <main class="flex items-center justify-center">
 	<section>
 		<h1 class="text-3xl">game of life</h1>
-		<Grid  rows={$game.length} columns={$game[0].length}/>
+		<!-- <Grid  rows={$game.length} columns={$game[0].length}/> -->
+	</section>
+	<section>
+		<GridP5/>
 	</section>
 </main>

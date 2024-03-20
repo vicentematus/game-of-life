@@ -106,7 +106,6 @@
 		const interval = setInterval(() => {
 			update_state();
 			tick();
-			debugger;
 			console.log('tick');
 		}, 1000);
 
