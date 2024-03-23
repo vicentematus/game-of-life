@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Grid from '$lib/components/Grid.svelte';
+	import AlternativeStoreGrid from '$lib/components/AlternativeStoreGrid.svelte';
+import Grid from '$lib/components/Grid.svelte';
 	import GridP5 from '$lib/components/GridP5.svelte';
 	import { game } from '$lib/game/data';
 	import { tick } from 'svelte';
@@ -19,6 +20,8 @@
 		<!-- <Grid  rows={$game.length} columns={$game[0].length}/> -->
 	</section>
 	<section>
-		<GridP5/>
+		  <!-- esta es la altenrnativa inicial -->
+		<!-- <GridP5/> -->
+		<AlternativeStoreGrid/>
 	</section>
 </main>

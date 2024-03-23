@@ -1,13 +1,22 @@
+import { game, DEBUG_NUMBER, ALIVE, DEAD, store_rows, store_columns } from '$lib/game/data';
+import { get } from 'svelte/store';
+
+export function out_ouf_bounds(x: number, y: number) {
+	return x < 0 || x >= get(store_rows) || y < 0 || y >= get(store_columns);
+}
+
 export function is_alive(x: number, y: number) {
-	const cell = $game[x][y];
+	const board = get(game);
+	// console.log({ board });
+
+	const cell = board[x][y];
+	// console.log({ cell });
+
 	if (cell === DEBUG_NUMBER) {
-		console.error('es una celda de tipo DEBUG');
 		return false;
 	} else if (cell === ALIVE) {
-		console.log('ALIVE CELL');
 		return true;
 	} else {
-		console.log('DEAD CELL');
 		return false;
 	}
 }
@@ -36,18 +45,15 @@ export function check_neighbors(x: number, y: number) {
 
 	let count = 0;
 	neighbors.forEach((neighbor) => {
-		console.log(neighbor);
-		// debugger;
 		const [x, y] = neighbor;
 
-		console.log(x, y);
-		// debugger;
+		if (out_ouf_bounds(x, y)) {
+			return;
+		}
 
 		return is_alive(x, y) ? count++ : null;
 	});
-	console.log('estas viendo la posicion ', x, y);
-	console.log('la cantidad de neighbors es ', count);
 
-	return { neighbors: count };
+	return count;
 	// debugger;
 }

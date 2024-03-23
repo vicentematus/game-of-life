@@ -9,11 +9,16 @@
 		DEBUG_NUMBER,
 		random_game
 	} from '$lib/game/data';
+	import { check_neighbors } from '$lib/game/rules';
 	import P5, { type p5 } from 'p5-svelte';
 
-	$: console.log({ $store_columns });
-	$: console.log({ $store_rows });
-	$: console.log('game es ', { $game });
+	// $: console.log({ $store_columns });
+	// $: console.log({ $store_rows });
+	// $: console.log('game es ', { $game });
+
+	// recommended by p5.js game of life implementation to avoid stuttering
+	let fps: number = 10;
+
 
 	let width = 400;
 	let height = 400;
@@ -26,63 +31,8 @@
 		let rows: number;
 		let next: number[][];
 
-		function init() {
-			for (let i = 0; i < columns; i++) {
-				for (let j = 0; j < rows; j++) {
-					next[i][j] = p5.floor(p5.random(2));
-				}
-			}
-		}
-
-		function out_ouf_bounds(x: number, y: number) {
-			return x < 0 || x >= rows || y < 0 || y >= columns;
-		}
-
-		function check_neighbors(x: number, y: number) {
-			const up = [x, y - 1];
-			const down = [x, y + 1];
-			const left = [x - 1, y];
-			const right = [x + 1, y];
-			const diagonal_up_left = [x - 1, y - 1];
-			const diagonal_up_right = [x + 1, y - 1];
-			const diagonal_down_left = [x - 1, y + 1];
-			const diagonal_down_right = [x + 1, y + 1];
-
-			const neighbors = [
-				up,
-				down,
-				left,
-				right,
-				diagonal_up_left,
-				diagonal_up_right,
-				diagonal_down_left,
-				diagonal_down_right
-			];
-
-			let count = 0;
-			neighbors.forEach((neighbor) => {
-				console.log(neighbor);
-				// debugger;
-				const [x, y] = neighbor;
-
-				if (out_ouf_bounds(x, y)) {
-					return;
-				}
-
-				console.log(x, y);
-				// debugger;
-
-				return is_alive(x, y) ? count++ : null;
-			});
-			console.log('estas viendo la posicion ', x, y);
-			console.log('la cantidad de neighbors es ', count);
-
-			return { neighbors: count };
-			// debugger;
-		}
-
 		p5.setup = () => {
-			p5.frameRate(10);
+			p5.frameRate(fps);
 			p5.createCanvas(400, 400);
 
 			// todo: agregar implementacion de height y width del contenedor
@@ -114,7 +64,15 @@
 				next[i] = new Array(rows);
 			}
 
+			function init() {
+				for (let i = 0; i < columns; i++) {
+					for (let j = 0; j < rows; j++) {
+						next[i][j] = p5.floor(p5.random(2));
+					}
+				}
+			}
 			console.log({ board });
+
 			init();
 
 			console.log({ next });
@@ -124,35 +82,68 @@
 			game.set(next_state);
 
 			// voy a setear el game state aca para cachar
-			console.log('hola');
-
-
 		};
 
 		p5.draw = () => {
 			// console.log(' me ejecute como draw')
 			p5.background(255);
-			for (let i = 0; i < columns; i++) {
-				for (let j = 0; j < rows; j++) {
-					if (next[i][j] == 1) {
-						p5.fill('orange');
-						// p5.rect(x, y, w-1, w-1);
-					} else {
-						p5.fill(255);
+			function paint() {
+				for (let i = 0; i < columns; i++) {
+					for (let j = 0; j < rows; j++) {
+						if (next[i][j] == 1) {
+							p5.fill('orange');
+							// p5.rect(x, y, w-1, w-1);
+						} else {
+							p5.fill(255);
+						}
+						p5.stroke(0);
+						p5.rect(i * w, j * w, w - 1, w - 1);
 					}
-					p5.stroke(0);
-					p5.rect(i * w, j * w, w - 1, w - 1);
 				}
 			}
+
+			function play() {
+				for (let i = 0; i < columns; i++) {
+					for (let j = 0; j < rows; j++) {
+						let state = next[i][j];
+						let neighbors: number = check_neighbors(i, j);
+
+						if (state == 0 && neighbors == 3) {
+							board[i][j] = 1;
+						} else if (state == 1 && (neighbors < 2 || neighbors > 3)) {
+							board[i][j] = 0;
+						} else {
+							board[i][j] = state;
+						}
+					}
+				}
+
+				// esto se encarga de ejevcutar las cosas
+				let temp = next;
+				next = board;
+				board = temp;
+			}
+
+
+			// hardcodeado para que este escuchando a los fps
+			p5.frameRate(fps);
+
+
+			paint();
+			play();
 		};
-
 	};
-</script>
 
+
+
+	console.log(sketch)
+	
+</script>
 
 <div>
 	<label class="text-white" for="">FPS</label>
-	<input type="range" min="10" max="80" step="5" aria-orientation="horizontal">
+	<input type="range" min="10" max="80" step="5" aria-orientation="horizontal" bind:value={fps} />
+	<p class="text-white"> {fps}</p>
 </div>
 
 <button
@@ -175,6 +166,4 @@
 	Random game
 </button>
 
-
-
-<P5 {sketch} />
+<P5 {sketch} debug />
