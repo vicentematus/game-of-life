@@ -10,19 +10,27 @@
 		random_game
 	} from '$lib/game/data';
 	import { check_neighbors } from '$lib/game/rules';
+	import { storeSketchControls, type SketchControls, fps } from '$lib/game/sketch';
 	import P5, { type p5 } from 'p5-svelte';
-
+	import { onMount, setContext } from 'svelte';
+	import Control from './Control.svelte';
 	// $: console.log({ $store_columns });
 	// $: console.log({ $store_rows });
 	// $: console.log('game es ', { $game });
 
 	// recommended by p5.js game of life implementation to avoid stuttering
-	let fps: number = 10;
+	let sketchFps= fps ;
+	let is_playing: boolean = true;
 
 
 	let width = 400;
 	let height = 400;
+	let p5_instance: p5;
+	// falta definir el tipo aca
+	let sketchControls: SketchControls;
+
 	const sketch = (p5: p5) => {
+		p5_instance = p5;
 		let width = 400;
 		let height = 400;
 		let board: number[][];
@@ -32,7 +40,7 @@
 		let next: number[][];
 
 		p5.setup = () => {
-			p5.frameRate(fps);
+			p5.frameRate($sketchFps);
 			p5.createCanvas(400, 400);
 
 			// todo: agregar implementacion de height y width del contenedor
@@ -85,14 +93,13 @@
 		};
 
 		p5.draw = () => {
-			// console.log(' me ejecute como draw')
 			p5.background(255);
+			console.log('me ejecuto en el draw')
 			function paint() {
 				for (let i = 0; i < columns; i++) {
 					for (let j = 0; j < rows; j++) {
 						if (next[i][j] == 1) {
 							p5.fill('orange');
-							// p5.rect(x, y, w-1, w-1);
 						} else {
 							p5.fill(255);
 						}
@@ -124,46 +131,47 @@
 				board = temp;
 			}
 
-
 			// hardcodeado para que este escuchando a los fps
-			p5.frameRate(fps);
-
+			// p5.frameRate(sketchFps);
 
 			paint();
 			play();
 		};
+
+		sketchControls = {
+			fps: (frames: number) => {
+				console.log('modificaste los fps de la instancia de p5')
+				p5.frameRate(frames);
+			},
+			play: () => {
+				p5_instance.loop();
+			},
+			pause: () => {
+				p5_instance.noLoop();
+			},
+			background: (color: number) => {
+				console.log('seteando el color')
+				p5.background(color);
+			},  
+			changeWidth(width: number) {
+				console.log
+				p5.resizeCanvas(width, p5.height);
+			},
+			
+		};
+
+		storeSketchControls.set(sketchControls);
+
 	};
 
-
-
-	console.log(sketch)
-	
 </script>
 
-<div>
+<!-- <div>
 	<label class="text-white" for="">FPS</label>
 	<input type="range" min="10" max="80" step="5" aria-orientation="horizontal" bind:value={fps} />
-	<p class="text-white"> {fps}</p>
-</div>
+	<p class="text-white">{fps}</p>
+</div> -->
 
-<button
-	title="Reset the game state"
-	aria-label="Reset the game state"
-	type="button"
-	class="rounded-lg bg-white px-4 py-2 hover:bg-gray-200"
-	on:click={restart_game}
->
-	Reset
-</button>
 
-<button
-	title="Create a random game state"
-	aria-label="Create a random game state"
-	type="button"
-	class="rounded-lg bg-white px-4 py-2 hover:bg-gray-200"
-	on:click={random_game}
->
-	Random game
-</button>
-
+<Control />
 <P5 {sketch} debug />
