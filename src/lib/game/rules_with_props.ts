@@ -22,11 +22,12 @@ export function is_alive(x: number, y: number) {
 }
 
 export function check_neighbors(x: number, y: number) {
+	console.log({ x }, { y });
+
 	const up = [x, y - 1];
 	const down = [x, y + 1];
 	const left = [x - 1, y];
 	const right = [x + 1, y];
-
 	// ojo aca man puede ser que este mal
 	const diagonal_up_left = [x - 1, y - 1];
 	const diagonal_up_right = [x + 1, y - 1];
@@ -58,8 +59,3 @@ export function check_neighbors(x: number, y: number) {
 	return count;
 	// debugger;
 }
-
-export function is_game_valid() {
-	const board = get(game);
-	return board.some((row) => row.some((cell) => cell === ALIVE));
-} 

@@ -22,3 +22,4 @@ export const storeSketchControls = writable<SketchControls>({
 	background: () => {},
 	changeWidth: () => {}
 });
+

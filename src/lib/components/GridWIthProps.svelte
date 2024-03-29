@@ -1,27 +1,36 @@
 <script lang="ts">
 	import {
-		game,
 		restart_game,
 		store_columns,
 		store_rows,
 		DEAD,
 		ALIVE,
 		DEBUG_NUMBER,
-		random_game,
-		game_status
+		random_game
 	} from '$lib/game/data';
 	import { check_neighbors, is_game_valid } from '$lib/game/rules';
 	import { storeSketchControls, type SketchControls, fps } from '$lib/game/sketch';
 	import P5, { type p5 } from 'p5-svelte';
-	import { onMount, setContext } from 'svelte';
 	import Control from './Control.svelte';
-	import { P5Service, p5_service_store } from '$lib/game/p5-service';
-	import { get } from 'svelte/store';
 
-	let sketchFps = fps;
+	// todo: ojo que falta todaiva por implementar los props. djealoo como ultima opcion.;
 
+	export let game: number[][];
+
+
+	console.log('game que me pasaste es ', game)
+
+
+	// recommended by p5.js game of life implementation to avoid stuttering
+
+	let sketchFps= fps ;
+	let is_playing: boolean = true;
+	
+
+
+	let width = 400;
+	let height = 400;
 	let p5_instance: p5;
-	let p5_service: P5Service;
 	// falta definir el tipo aca
 	let sketchControls: SketchControls;
 
@@ -29,24 +38,13 @@
 		p5_instance = p5;
 		let width = 400;
 		let height = 400;
-
-		let w: number = 20;
-
 		let board: number[][];
-		let next: number[][];
-
-		// maybe this should be exposed via just the game store. like board.lenght or board[0].length
+		let w: number = 20;
 		let columns: number;
 		let rows: number;
-
-		// inicializar p5 service
-
-		p5_service = new P5Service(p5);
-		console.log(p5);
-		p5_service_store.set(p5_service);
+		let next: number[][];
 
 		p5.setup = () => {
-			p5_service.setup(p5);
 			p5.frameRate($sketchFps);
 			p5.createCanvas(400, 400);
 
@@ -54,6 +52,9 @@
 			// console.log('el objeto de windows es ',window)
 			// console.log(window.innerHeight)
 			// p5.floor(window.innerHeight)
+
+			// lo infiere del canvas
+			console.log(p5.width);
 
 			// ojo aca estamos seteando las columnas
 			columns = p5.floor(p5.width / w);
@@ -91,13 +92,14 @@
 
 			// seteando el game state
 			const next_state = next;
-			game.set(next_state);
+			game = next_state;
 
 			// voy a setear el game state aca para cachar
 		};
 
 		p5.draw = () => {
 			p5.background(255);
+			console.log('me ejecuto en el draw')
 			function paint() {
 				for (let i = 0; i < columns; i++) {
 					for (let j = 0; j < rows; j++) {
@@ -127,24 +129,18 @@
 						}
 					}
 				}
+				
 
 				// esto se encarga de ejevcutar las cosas
 				let temp = next;
 				next = board;
 				board = temp;
-
-				// aca hay que setearlo bien
-				game.set(next);
-
-				const is_valid = is_game_valid();
-
-				if (is_valid === false) {
-					p5.noLoop();
-					// esto es para diferencia si el boolean false o true
-					game_status.set(is_valid);
-				}
-				// console.log({ is_valid });
 			}
+
+			// hardcodeado para que este escuchando a los fps
+			// p5.frameRate(sketchFps);
+
+
 
 			paint();
 			play();
@@ -152,7 +148,7 @@
 
 		sketchControls = {
 			fps: (frames: number) => {
-				console.log('modificaste los fps de la instancia de p5');
+				console.log('modificaste los fps de la instancia de p5')
 				p5.frameRate(frames);
 			},
 			play: () => {
@@ -162,17 +158,20 @@
 				p5_instance.noLoop();
 			},
 			background: (color: number) => {
-				console.log('seteando el color');
+				console.log('seteando el color')
 				p5.background(color);
-			},
+			},  
 			changeWidth(width: number) {
-				console.log;
+				console.log
 				p5.resizeCanvas(width, p5.height);
-			}
+			},
+			
 		};
 
 		storeSketchControls.set(sketchControls);
+
 	};
+
 </script>
 
 <!-- <div>
@@ -180,6 +179,7 @@
 	<input type="range" min="10" max="80" step="5" aria-orientation="horizontal" bind:value={fps} />
 	<p class="text-white">{fps}</p>
 </div> -->
+
 
 <Control />
 <P5 {sketch} debug />

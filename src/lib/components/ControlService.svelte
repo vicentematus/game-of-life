@@ -1,30 +1,21 @@
 <script lang="ts">
 	import { random_game, restart_game } from '$lib/game/data';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { DEFAULT_FPS, isPlaying, storeSketchControls } from '$lib/game/sketch';
-	import { p5_service_store } from '$lib/game/p5-service';
-	import { get } from 'svelte/store';
+	import type { P5Service } from '$lib/game/p5-service';
 
+	console.log(getContext('prueba'));
 
-	const p5Service = get(p5_service_store);
+	$: console.log($isPlaying);
 
+	let p5Service: P5Service;
 
-	function toggle_play_service(){
-
-
+	onMount(() => {
+        p5Service = getContext('p5Service');
 		console.log(p5Service)
-		if(!p5Service){
-			return;
-		}
-
-		if($isPlaying){
-			p5Service.pause();
-		} else {
-			p5Service.play();
-		}
+    });
 
 
-	}
 
 	function play() {
 		$storeSketchControls.play();
@@ -100,13 +91,4 @@
 	on:click={toggle_play}
 >
 	{$isPlaying ? 'Play' : 'Pause'}
-</button>
-
-
-<button
-	type="button"
-	class="rounded-lg bg-indigo-200 px-4 py-2 hover:bg-gray-200"
-	on:click={toggle_play_service}
->
-	{$isPlaying ? 'Play via Service' : 'Pause via Service'}
 </button>

@@ -14,6 +14,8 @@ export const store_columns: Writable<number> = writable(0);
 
 export const game: Writable<(DEAD | ALIVE | DEBUG_NUMBER | number)[][]> = writable();
 
+export const game_status = writable(true);
+
 // recommended by p5.js game of life implementation to avoid stuttering.
 
 export function restart_game() {
