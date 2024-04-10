@@ -57,3 +57,10 @@ export function check_neighbors(x: number, y: number) {
 	return count;
 	// debugger;
 }
+
+
+
+export function is_game_valid() {
+	const board = get(game);
+	return board.some((row) => row.some((cell) => cell === ALIVE));
+} 

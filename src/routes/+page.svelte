@@ -3,7 +3,7 @@
 import Grid from '$lib/components/Grid.svelte';
 	import GridP5 from '$lib/components/GridP5.svelte';
 	import { game } from '$lib/game/data';
-	import { tick } from 'svelte';
+	import { game_status } from '$lib/game/data';
 
 	// create a matrix for game of life
 	const matrix = Array.from({ length: 10 }, () =>
@@ -17,7 +17,7 @@ import Grid from '$lib/components/Grid.svelte';
 <main class="flex items-center justify-center">
 	<section>
 		<h1 class="text-3xl">game of life</h1>
-		<!-- <Grid  rows={$game.length} columns={$game[0].length}/> -->
+		<p class="text-white">{$game_status}</p>
 	</section>
 	<section>
 		  <!-- esta es la altenrnativa inicial -->

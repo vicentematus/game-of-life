@@ -7,9 +7,12 @@
 		DEAD,
 		ALIVE,
 		DEBUG_NUMBER,
-		random_game
+		random_game,
+
+		game_status
+
 	} from '$lib/game/data';
-	import { check_neighbors } from '$lib/game/rules';
+	import { check_neighbors, is_game_valid } from '$lib/game/rules';
 	import { storeSketchControls, type SketchControls, fps } from '$lib/game/sketch';
 	import P5, { type p5 } from 'p5-svelte';
 	import { onMount, setContext } from 'svelte';
@@ -129,6 +132,17 @@
 				let temp = next;
 				next = board;
 				board = temp;
+
+				// para que funcione bien el board aprece que hay que hacerla aca:
+				game.set(next)
+
+				const is_valid = is_game_valid();
+				if (is_valid === false) {
+					p5.noLoop();
+					// esto es para diferencia si el boolean false o true
+					game_status.set(is_valid);
+				}
+				// console.log({ is_valid });
 			}
 
 			// hardcodeado para que este escuchando a los fps
