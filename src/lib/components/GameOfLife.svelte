@@ -145,9 +145,10 @@
 					game_status.set(is_valid);
 				}
 			}
-
-			paint();
+			
 			play();
+			paint();
+			
 		};
 
 		p5.windowResized = () => {
