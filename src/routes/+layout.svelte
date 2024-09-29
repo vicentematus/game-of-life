@@ -2,8 +2,7 @@
 	import '../app.css';
 </script>
 
-<div class="min-h-screen w-full bg-gray-800"> 
-
+<div class="h-screen w-screen bg-gray-800"> 
 	<slot />
 </div>
 
