@@ -1,38 +1,26 @@
-# create-svelte
+# Conway's Game Of Life
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+From Wikipedia:
+> The Game of Life, also known simply as Conway's Game of Life or simply Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves. It is Turing complete and can simulate a universal constructor or any other Turing machine.
 
-## Creating a project
+[Knew about this from a Lex Fridman podcast.](https://www.youtube.com/watch?v=toIoROXuqtY)
 
-If you're seeing this, you've probably already done this step. Congrats!
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Installation
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+First, [install Bun runtime](https://bun.sh/) because we are using it as a package manager.
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+curl -fsSL https://bun.sh/install | bash
 ```
 
-## Building
-
-To create a production version of your app:
-
+Then install dependencies on the root folder:
 ```bash
-npm run build
+bun install
 ```
 
-You can preview the production build with `npm run preview`.
+Run the dev server. 
+```bash
+bun run dev
+```
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
