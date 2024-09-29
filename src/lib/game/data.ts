@@ -1,3 +1,4 @@
+// import { tick } from 'svelte';
 import { writable, get, type Writable } from 'svelte/store';
 
 export const DEAD = 0;
@@ -17,22 +18,20 @@ export const game_status = writable(true);
 
 // recommended by p5.js game of life implementation to avoid stuttering.
 
-export function restart_game() {
-	const rows = get(store_rows);
-	console.log('rows', rows);
-
-	const columns = get(store_columns);
-	console.log('columns', columns);
-
-	// ojo con este error de tipo
-	const empty_game = Array.from({ length: rows }, () =>
-		Array.from({ length: columns }, () => DEAD)
-	) as (DEAD | ALIVE | DEBUG_NUMBER)[][];
-
-	console.log('me reinicie exitosamente');
-
-	console.log(get(game));
-	game.set(empty_game);
+export async function restart_game() {
+	// TODO: add correct logic to deal with this.
+	// const rows = get(store_rows);
+	// console.log('rows', rows);
+	// const columns = get(store_columns);
+	// console.log('columns', columns);
+	// // ojo con este error de tipo
+	// const empty_game = Array.from({ length: rows }, () =>
+	// 	Array.from({ length: columns }, () => DEAD)
+	// ) as (DEAD | ALIVE | DEBUG_NUMBER)[][];
+	// console.log('me reinicie exitosamente');
+	// console.log(get(game));
+	// game.set(empty_game);
+	// await tick();
 }
 
 export function random_game() {
@@ -42,8 +41,5 @@ export function random_game() {
 	const random_game = Array.from({ length: rows }, () =>
 		Array.from({ length: columns }, () => (Math.random() > 0.5 ? ALIVE : DEAD))
 	) as (DEAD | ALIVE | DEBUG_NUMBER)[][];
-
-	console.log(random_game);
-
 	game.set(random_game);
 }

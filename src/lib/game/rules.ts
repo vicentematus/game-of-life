@@ -7,10 +7,7 @@ export function out_ouf_bounds(x: number, y: number) {
 
 export function is_alive(x: number, y: number) {
 	const board = get(game);
-	// console.log({ board });
-
 	const cell = board[x][y];
-	// console.log({ cell });
 
 	if (cell === DEBUG_NUMBER) {
 		return false;
@@ -55,7 +52,6 @@ export function check_neighbors(x: number, y: number) {
 	});
 
 	return count;
-	// debugger;
 }
 
 
