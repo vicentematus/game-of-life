@@ -56,6 +56,10 @@
 
 			p5.createCanvas(Math.floor(p5.windowWidth), Math.floor(p5.windowHeight));
 
+			p5.canvas.oncontextmenu = (e) => {
+				e.preventDefault();
+			};
+
 			columns = p5.floor(p5.width / w);
 			rows = p5.floor(p5.height / w);
 
@@ -99,6 +103,11 @@
 
 				if (col >= 0 && col < columns && row >= 0 && row < rows) {
 					next[row][col] = 1;
+					paint();
+				}
+
+				if (p5.mouseButton === p5.RIGHT) {
+					next[row][col] = 0;
 					paint();
 				}
 			}
