@@ -56,6 +56,10 @@
 
 			p5.createCanvas(Math.floor(p5.windowWidth), Math.floor(p5.windowHeight));
 
+			p5.canvas.oncontextmenu = (e) => {
+				e.preventDefault();
+			};
+
 			columns = p5.floor(p5.width / w);
 			rows = p5.floor(p5.height / w);
 
@@ -77,9 +81,7 @@
 			game.set(next);
 		};
 
-		p5.draw = () => {
-			p5.background(255);
-			function paint() {
+		function paint() {
 				for (let i = 0; i < rows; i++) {
 					for (let j = 0; j < columns; j++) {
 						if (next[i][j] == 1) {
@@ -87,11 +89,33 @@
 						} else {
 							p5.fill(255);
 						}
+
 						p5.stroke(0);
 						p5.rect(j * w, i * w, w - 1, w - 1);
 					}
 				}
+		}
+
+
+		function mousePressed() {
+				let col = Math.floor(p5.mouseX / w);
+				let row = Math.floor(p5.mouseY / w);
+
+				if (col >= 0 && col < columns && row >= 0 && row < rows) {
+					next[row][col] = 1;
+					paint();
+				}
+
+				if (p5.mouseButton === p5.RIGHT) {
+					next[row][col] = 0;
+					paint();
+				}
 			}
+
+		p5.mousePressed = mousePressed
+
+		p5.draw = () => {
+			p5.background(255);
 
 			function play() {
 				for (let i = 0; i < rows; i++) {
@@ -121,10 +145,10 @@
 					game_status.set(is_valid);
 				}
 			}
-
-
-			paint();
+			
 			play();
+			paint();
+			
 		};
 
 		p5.windowResized = () => {
@@ -166,6 +190,8 @@
 				p5.resizeCanvas(width, p5.height);
 			}
 		};
+
+
 
 		storeSketchControls.set(sketchControls);
 	};
