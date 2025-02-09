@@ -23,7 +23,6 @@ export function check_neighbors(x: number, y: number) {
 	const down = [x, y + 1];
 	const left = [x - 1, y];
 	const right = [x + 1, y];
-	// ojo aca man puede ser que este mal
 	const diagonal_up_left = [x - 1, y - 1];
 	const diagonal_up_right = [x + 1, y - 1];
 	const diagonal_down_left = [x - 1, y + 1];
