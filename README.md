@@ -23,10 +23,6 @@ Many different patterns exist on Game Of Life. `Still lifes`: stays the same, `O
 
 First, [install Bun runtime](https://bun.sh/) because we are using it as a package manager.
 
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-
 Then install dependencies on the root folder:
 ```bash
 bun install
